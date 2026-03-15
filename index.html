@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOID APK | BY DENIS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --blood: #880000; --neon: #ff0000; --spotify: #1DB954; }
+        
+        body {
+            background: #000; color: #ccc; font-family: 'Roboto', sans-serif;
+            margin: 0; overflow-x: hidden; display: flex; justify-content: center; align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 1. SEKSI LOGIN */
+        #loginSection {
+            background: rgba(10, 0, 0, 0.95);
+            padding: 30px; border: 2px solid var(--blood);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+            border-radius: 10px; width: 320px; text-align: center;
+            z-index: 100;
+        }
+        .owner-img {
+            width: 80px; height: 80px; border-radius: 50%;
+            border: 2px solid var(--neon); object-fit: cover; margin-bottom: 15px;
+        }
+
+        /* 2. SEKSI ANIMASI SKULL */
+        #animContainer {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: #000;
+            justify-content: center; align-items: center; z-index: 200;
+        }
+        video { width: 100%; height: 100%; object-fit: cover; }
+
+        /* 3. SEKSI DOWNLOADER UTAMA */
+        #mainApp {
+            display: none; width: 100%; max-width: 500px;
+            padding: 20px; text-align: center; animation: fadeIn 1s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .app-card {
+            background: rgba(15, 0, 0, 0.9);
+            padding: 25px; border: 1px double var(--blood);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+        }
+
+        /* UI ELEMENTS */
+        h1, h2 { font-family: 'Nosifer'; color: var(--neon); }
+        input {
+            width: 100%; padding: 15px; background: #111; border: 1px solid #440000;
+            color: #ff4d4d; box-sizing: border-box; outline: none; margin-bottom: 15px; text-align: center;
+        }
+        button {
+            width: 100%; padding: 15px; background: var(--blood); color: #fff;
+            border: none; font-weight: bold; cursor: pointer; text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        button:hover { background: var(--neon); box-shadow: 0 0 15px var(--neon); }
+
+        #result { margin-top: 25px; display: none; text-align: left; }
+        .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-dl { 
+            background: #111; border: 1px solid var(--blood); color: #fff; 
+            padding: 12px; text-decoration: none; text-align: center; font-size: 0.8rem;
+        }
+        .welcome-msg { font-family: 'Creepster'; color: var(--neon); margin-top: 10px; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+
+    <div id="loginSection">
+        <img src="foto.jpeg" class="owner-img" alt="Denis">
+        <h2>VOID GATE</h2>
+        <input type="text" id="user" placeholder="USERNAME">
+        <input type="password" id="pass" placeholder="PASSWORD">
+        <button onclick="startAuth()">HARVEST ACCESS</button>
+    </div>
+
+    <div id="animContainer">
+        <video id="skullVid" playsinline>
+            <source src="skull.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div id="mainApp">
+        <div class="app-card">
+            <h1>VOID DL</h1>
+            <p class="welcome-msg">WELCOME TO APK DENIS</p>
+            <input type="text" id="targetUrl" placeholder="Paste link (TikTok, YT, IG, SP)...">
+            <button onclick="runExtractor()">EXTRACT SOUL</button>
+
+            <div id="result">
+                <div id="options" class="dl-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FUNGSI LOGIN & ANIMASI
+        function startAuth() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            const vid = document.getElementById('skullVid');
+
+            // EDIT USER/PASS DI SINI
+            if(u === "denis" && p === "void123") {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('animContainer').style.display = 'flex';
+                
+                vid.play();
+                
+                // Pindah ke App setelah video selesai (atau setelah 7 detik)
+                vid.onended = showApp;
+                setTimeout(showApp, 7000); 
+            } else {
+                alert("ACCESS DENIED!");
+            }
+        }
+
+        function showApp() {
+            document.getElementById('animContainer').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+        }
+
+        // FUNGSI DOWNLOADER
+        async function runExtractor() {
+            const url = document.getElementById('targetUrl').value.trim();
+            const opt = document.getElementById('options');
+            const resDiv = document.getElementById('result');
+            
+            if(!url) return;
+            opt.innerHTML = '<p style="color:red">Processing...</p>';
+            resDiv.style.display = 'block';
+
+            try {
+                if (url.includes('tiktok.com')) {
+                    const r = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
+                    const j = await r.json();
+                    opt.innerHTML = `
+                        <a href="${j.data.play}" class="btn-dl" target="_blank">VIDEO NO WM</a>
+                        <a href="${j.data.music}" class="btn-dl" target="_blank">AUDIO MP3</a>
+                    `;
+                } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                    opt.innerHTML = `<a href="https://www.y2mate.com/youtube/${extractYT(url)}" class="btn-dl" style="grid-column: span 2" target="_blank">GO TO YT DOWNLOADER</a>`;
+                } else if (url.includes('instagram.com')) {
+                    opt.innerHTML = `<a href="${url.replace('instagram.com', 'ddinstagram.com')}" class="btn-dl" style="grid-column: span 2" target="_blank">DOWNLOAD IG MEDIA</a>`;
+                } else if (url.includes('spotify.com')) {
+                    opt.innerHTML = `<a href="https://spotidown.com/download?link=${url}" class="btn-dl" style="grid-column: span 2; border-color:var(--spotify)" target="_blank">CONVERT SPOTIFY MP3</a>`;
+                } else {
+                    opt.innerHTML = `<a href="https://en.savefrom.net/?url=${url}" class="btn-dl" style="grid-column: span 2" target="_blank">UNIVERSAL DOWNLOAD</a>`;
+                }
+            } catch(e) {
+                opt.innerHTML = '<p>Error extracting soul.</p>';
+            }
+        }
+
+        function extractYT(url) {
+            const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|.*\/|.*embed\/))([^"&?\/\s]{11})/);
+            return m ? m[1] : '';
+        }
+    </script>
+</body>
+</html>
